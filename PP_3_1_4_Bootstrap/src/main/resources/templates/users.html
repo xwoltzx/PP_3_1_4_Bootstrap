@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Users</title>
+</head>
+<body>
+<!--<div class="container">-->
+    <div class="row" style="background-color: #343A40; height: 5vh">
+        <div class="col" style="color: white">
+            <em style="white-space: pre"> </em>
+            <b th:text=" ${owner.getUsername()}">  </b> with roles:
+            <b th:text="${owner.getRoles()}"></b>
+            <a href="/logout" style="color: gray; float: right; margin-right: 5px">Logout</a>
+        </div>
+    </div>
+    <div class="row" style="height: 95vh">
+        <div class="col" style="background-color: white">
+            <div class="nav flex-column nav-pills" id="navTabs">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#admin" style="width: 100%">Admin</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#user">User</a>
+            </div>
+        </div>
+        <div class="col-10" style="background-color: #F8F9FA">
+            <div class="tab-content mt-2">
+                <div class="tab-pane fade show active" id="admin">
+                    <h2>Admin panel</h2>
+                    <div class="container mt-5">
+
+                        <ul class="nav nav-tabs" id="myTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#tab1">Users table</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#tab2">New user</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-2">
+                            <div class="tab-pane fade show active" id="tab1">
+                                <h5>All users</h5>
+                                <table class="table table-light" border="solid 4mm ">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Username</th>
+                                        <th scope="col">Password</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Age</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Role</th>
+                                        <th scope="col">Edit</th>
+                                        <th scope="col">Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user : ${users}" onmouseover="this.style.background='#F8F9FA'" onmouseout="this.style.background='white'">
+                                        <td th:text="${user.getId()}"/>
+                                        <td th:text="${user.getUsername()}"/>
+                                        <td th:text="${user.getPassword().substring(0, 10)}+'...'" style="max-width: 50px"/>
+                                        <td th:text="${user.getName()}"/>
+                                        <td th:text="${user.getAge()}"/>
+                                        <td th:text="${user.getEmail()}"/>
+                                        <td th:text="${user.getRoles()}"/>
+
+                                        <td>
+
+<!--                                            <button th:href="@{'/admin/edit?id='+${user.getId()}}"> Edit </button>-->
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#edit' + ${user.id}" style="background-color: #17A2B8; color: white">
+                                                Edit
+                                            </button>
+                                        </td>
+
+                                        <td>
+                                            <form th:method="DELETE" th:action="@{/admin/{id} (id=${user.getId()})}" th:object="${user}">
+                                                <input type="submit" class="btn btn-primary" style="background-color: #DC3545; color: white" value="Delete"/>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="tab2">
+                                <h2>Add new user</h2>
+                                <form method="post" th:action="@{/admin/new}" th:object="${newUser}" style="margin-left: 250px; margin-right: 250px; text-align: center">
+                                    <label for="editUsername1" style="font-weight: bold">Username</label>
+                                    <input type="text" class="form-control" id="editUsername1" th:field="*{username}">
+                                    <label for="editPassword1"  style="font-weight: bold">Password</label>
+                                    <input type="text" class="form-control" id="editPassword1" th:field="*{password}">
+                                    <label for="editName1"  style="font-weight: bold">Name</label>
+                                    <input type="text" class="form-control" id="editName1" th:field="*{name}">
+                                    <label for="editAge1"  style="font-weight: bold">Age</label>
+                                    <input type="number" class="form-control" id="editAge1" th:field="*{age}">
+                                    <label for="editEmail1"  style="font-weight: bold">Email</label>
+                                    <input type="email" class="form-control" id="editEmail1" th:field="*{email}">
+                                    <label style="font-weight: bold">Roles: </label>
+                                    <select multiple class="form-control" id="EditRoleSelect1" size="2" th:value="*{roles}" th:name="roles">
+                                        <option
+                                                th:each="role : ${newAllRoles}"
+                                                th:text="${role.name}"
+                                                th:value="${role.id}"
+                                        />
+                                    </select>
+                                    </label>
+                                    <p></p>
+                                    <button type="submit" class="btn btn-primary" style="background-color: #218838">Add new user</button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="user">
+                    <h2>User information-page</h2>
+                    <div class="tab-pane fade show active" id="tab5">
+                        <h5>About user</h5>
+                        <table class="table table-light" border="solid 4mm ">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Password</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr onmouseover="this.style.background='#F8F9FA'" onmouseout="this.style.background='white'">
+                                <td th:text="${owner.getId()}"/>
+                                <td th:text="${owner.getUsername()}"/>
+                                <td th:text="${owner.getPassword().substring(0, 10)}+'...'" style="max-width: 50px"/>
+                                <td th:text="${owner.getName()}"/>
+                                <td th:text="${owner.getAge()}"/>
+                                <td th:text="${owner.getEmail()}"/>
+                                <td th:text="${owner.getRoles()}"/>
+                            </tr>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<div th:each="user : ${users}">
+    <div class="modal fade" th:id="'edit' + ${user.id}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit User</h4>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" th:action="@{edit?id=} + ${user.getId()}" th:object="${user}">
+                        <label for="editUsername" style="font-weight: bold">Username</label>
+                        <input type="text" class="form-control" id="editUsername" th:value="*{username}" th:name="username">
+                            <label for="editPassword"  style="font-weight: bold">Password</label>
+                            <input type="text" class="form-control" id="editPassword" th:value="${user.password}" th:name="password">
+                            <label for="editName"  style="font-weight: bold">Name</label>
+                            <input type="text" class="form-control" id="editName" th:value="${user.name}" th:name="name">
+                            <label for="editAge"  style="font-weight: bold">Age</label>
+                            <input type="number" class="form-control" id="editAge" th:value="${user.age}" th:name="age">
+                            <label for="editEmail"  style="font-weight: bold">Email</label>
+                            <input type="email" class="form-control" id="editEmail" th:value="${user.email}" th:name="email">
+                        <label style="font-weight: bold">Roles: </label>
+                            <select multiple class="form-control" id="EditRoleSelect" size="2" th:value="*{roles}" th:name="roles">
+                            <option
+                                   th:each="role : ${allRoles}"
+                                   th:text="${role.name}"
+                                   th:value="${role.id}"
+                            />
+                            </select>
+                        </label>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--</div>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

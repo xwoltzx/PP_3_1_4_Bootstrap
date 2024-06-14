@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Users</title>
+</head>
+<body>
+<!--<div class="container">-->
+<div class="row" style="background-color: #343A40; height: 5vh">
+    <div class="col" style="color: white">
+        <em style="white-space: pre"> </em>
+        <b th:text=" ${owner.getUsername()}">  </b> with roles:
+        <b th:text="${owner.getRoles()}"></b>
+        <a href="/logout" style="color: gray; float: right; margin-right: 5px">Logout</a>
+    </div>
+</div>
+<div class="row" style="height: 95vh">
+    <div class="col" style="background-color: white">
+        <div class="nav flex-column nav-pills" id="navTabs">
+            <a class="nav-link" data-bs-toggle="tab" href="#user">User</a>
+        </div>
+    </div>
+    <div class="col-10" style="background-color: #F8F9FA">
+        <div class="tab-content mt-2">
+            <div class="tab-pane fade show active" id="user">
+                <h2>User information-page</h2>
+                <div class="tab-pane fade show active" id="tab5">
+                    <h5>About user</h5>
+                    <table class="table table-light" border="solid 4mm ">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Password</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Age</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr onmouseover="this.style.background='#F8F9FA'" onmouseout="this.style.background='white'">
+                            <td th:text="${owner.getId()}"/>
+                            <td th:text="${owner.getUsername()}"/>
+                            <td th:text="${owner.getPassword().substring(0, 10)}+'...'" style="max-width: 50px"/>
+                            <td th:text="${owner.getName()}"/>
+                            <td th:text="${owner.getAge()}"/>
+                            <td th:text="${owner.getEmail()}"/>
+                            <td th:text="${owner.getRoles()}"/>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
